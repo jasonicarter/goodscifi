@@ -3,28 +3,24 @@ import os
 import click
 import logging
 from dotenv import find_dotenv, load_dotenv
-
+import tmdb_posters
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
-    """
+def main(output_filepath):
+    '''
+    Runs data processing scripts to turn raw data from into
+    cleaned data ready to be analyzed.
+    '''
     logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
-
+    logger.info('TMDB data retrieval')
+    tmdb_posters.get_posters('sci', medium='tv', page_limit=1, output_filepath=output_filepath)
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    # not used in this stub but often useful for finding various files
-    project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
-
     # find .env automagically by walking up directories until it's found, then
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
-
     main()
