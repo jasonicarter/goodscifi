@@ -6,7 +6,7 @@ class TopUSGrossing(scrapy.Spider):
     start_urls = [
         'http://www.imdb.com/search/title?genres=sci_fi&title_type=feature&page=1&sort=boxoffice_gross_us,desc&ref_=adv_prv',
     ]
-    
+
     def parse(self, response):
         for item in response.css('div.lister-item-content'):
             yield {
