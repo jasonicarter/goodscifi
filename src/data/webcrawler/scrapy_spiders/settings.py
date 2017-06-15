@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for imdb_com project
+# Scrapy settings for scrapy_spiders project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'imdb_com'
+BOT_NAME = 'scrapy_spiders'
 
-SPIDER_MODULES = ['imdb_com.spiders']
-NEWSPIDER_MODULE = 'imdb_com.spiders'
+SPIDER_MODULES = ['scrapy_spiders.spiders']
+NEWSPIDER_MODULE = 'scrapy_spiders.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'imdb_com (+http://www.yourdomain.com)'
+#USER_AGENT = 'scrapy_spiders (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'imdb_com.middlewares.ImdbComSpiderMiddleware': 543,
+#    'scrapy_spiders.middlewares.ScrapySpidersSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'imdb_com.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'scrapy_spiders.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'imdb_com.pipelines.ImdbComPipeline': 300,
+#    'scrapy_spiders.pipelines.ScrapySpidersPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

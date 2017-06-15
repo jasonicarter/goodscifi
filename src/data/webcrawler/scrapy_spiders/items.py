@@ -8,7 +8,7 @@
 import scrapy
 
 
-class ImdbComItem(scrapy.Item):
+class ScrapySpidersItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
