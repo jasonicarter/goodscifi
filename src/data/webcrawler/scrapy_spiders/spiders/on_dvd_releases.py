@@ -40,6 +40,5 @@ class SpiderOnDVD(scrapy.Spider):
 
     def enforce_page_limit(self, response):
         current_page = response.css('div.top2 span.buttonsel::text').extract_first()
-        print(current_page)
         if current_page == self.page_limit:
             raise CloseSpider('Reached requested page limit')

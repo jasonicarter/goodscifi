@@ -70,6 +70,9 @@ ITEM_PIPELINES = {
    'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
 }
 
+# Configure logs
+LOG_LEVEL = 'INFO'
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
