@@ -4,12 +4,12 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from scrapy_spiders.items import ImdbItem
+from scrapy_spiders.items import ImdbItem, OnDvdItem
 import re
 
-class ScrapySpidersPipeline(object):
-    def process_item(self, item, spider):
-        return item
+# Need to deal with 's and : here and also in tmdb_posters
+def clean_title(item):
+    return item['title'].replace(' ', '-')
 
 class ImdbItemPipeline(object):
     # Data issues to deal with
@@ -19,8 +19,18 @@ class ImdbItemPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, ImdbItem):
             if item['title']:
-                # Need to deal with 's and : here and also in tmdb_posters
-                item['title'] = item['title'].replace(' ', '-')
+                item['title'] = clean_title(item)
             if item['year']:
                 item['year'] = re.sub('^\(.*\)\s|[()]|\u2013([0-9])*','',item['year'])
+        return item
+
+class OnDvdItemPipeline(object):
+    # Data issues to deal with
+    # "year": (2015 film) Action, Sci-Fi
+    def process_item(self, item, spider):
+        if isinstance(item, OnDvdItem):
+            if item['title']:
+                item['title'] = clean_title(item)
+            if item['year']:
+                item['year'] = re.sub('[^0-9]*','',item['year'])
         return item

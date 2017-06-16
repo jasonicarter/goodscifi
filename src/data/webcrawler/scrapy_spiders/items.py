@@ -7,11 +7,12 @@
 
 import scrapy
 
-class ScrapySpidersItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+# Need multiple items due to diff spider data clean up requirements
 
 class ImdbItem(scrapy.Item):
+    title = scrapy.Field()
+    year = scrapy.Field()
+
+class OnDvdItem(scrapy.Item):
     title = scrapy.Field()
     year = scrapy.Field()

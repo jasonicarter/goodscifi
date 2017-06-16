@@ -67,6 +67,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
    # 'scrapy_spiders.pipelines.ScrapySpidersPipeline': 300,
    'scrapy_spiders.pipelines.ImdbItemPipeline': 300,
+   'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
