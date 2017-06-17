@@ -23,10 +23,10 @@ class SpiderOnDVD(scrapy.Spider):
 
     def page_sorted(self, response):
         # 5 results per page
-        for titles in response.css('div.detailmainshort'):
+        for title in response.css('div.detailmainshort'):
             item = OnDvdItem()
-            item['title'] = titles.css('div.mtitle a::text').extract_first()
-            item['year'] = titles.css('div.mgenre::text').extract_first()
+            item['title'] = title.css('div.mtitle a::text').extract_first()
+            item['year'] = title.css('div.mgenre::text').extract_first()
             yield item
 
         #Stop parsing if page limit is reached

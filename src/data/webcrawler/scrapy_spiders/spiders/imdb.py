@@ -12,10 +12,10 @@ class SpiderIMDB(scrapy.Spider):
 
     def parse(self, response):
 
-        for titles in response.css('div.lister-item-content'):
+        for title in response.css('div.lister-item-content'):
             item = ImdbItem()
-            item['title'] = titles.css('h3.lister-item-header a::text').extract_first()
-            item['year'] = titles.css('span.lister-item-year::text').extract_first()
+            item['title'] = title.css('h3.lister-item-header a::text').extract_first()
+            item['year'] = title.css('span.lister-item-year::text').extract_first()
             yield item
 
         # Stop parsing if page limit is reached
