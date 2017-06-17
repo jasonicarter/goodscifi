@@ -68,6 +68,7 @@ ITEM_PIPELINES = {
    # 'scrapy_spiders.pipelines.ScrapySpidersPipeline': 300,
    'scrapy_spiders.pipelines.ImdbItemPipeline': 300,
    'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
+   'scrapy_spiders.pipelines.RottenTmItemPipeline': 500,
 }
 
 # Configure logs

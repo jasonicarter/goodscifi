@@ -16,3 +16,7 @@ class ImdbItem(scrapy.Item):
 class OnDvdItem(scrapy.Item):
     title = scrapy.Field()
     year = scrapy.Field()
+
+class RottenTmItem(scrapy.Item):
+    title = scrapy.Field()
+    year = scrapy.Field()
