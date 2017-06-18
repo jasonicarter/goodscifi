@@ -10,8 +10,9 @@ import re
 # Need to deal with 's and : here and also in tmdb_posters
 def clean_title(title):
     if title is None: return None
-        
-    title = title.strip()
+
+    title = title.strip() # Removing leading+trailing white space
+    title = title.strip('[S1],[S2],[C]') # Books
     title = title.replace(' ', '-')
     return title
 
