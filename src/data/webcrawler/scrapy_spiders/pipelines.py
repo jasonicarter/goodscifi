@@ -9,6 +9,8 @@ import re
 
 # Need to deal with 's and : here and also in tmdb_posters
 def clean_title(title):
+    if title is None: return None
+        
     title = title.strip()
     title = title.replace(' ', '-')
     return title
