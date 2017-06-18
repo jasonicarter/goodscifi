@@ -18,6 +18,7 @@ NEWSPIDER_MODULE = 'scrapy_spiders.spiders'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_spiders (+http://www.yourdomain.com)'
 
+
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
@@ -69,6 +70,7 @@ ITEM_PIPELINES = {
    'scrapy_spiders.pipelines.ImdbItemPipeline': 300,
    'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
    'scrapy_spiders.pipelines.RottenTmItemPipeline': 500,
+   'scrapy_spiders.pipelines.IgnItemPipeline': 600,
 }
 
 # Configure logs

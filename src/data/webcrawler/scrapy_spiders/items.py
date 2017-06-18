@@ -20,3 +20,7 @@ class OnDvdItem(scrapy.Item):
 class RottenTmItem(scrapy.Item):
     title = scrapy.Field()
     year = scrapy.Field()
+
+class IgnItem(scrapy.Item):
+    title = scrapy.Field()
+    year = scrapy.Field()

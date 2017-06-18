@@ -50,3 +50,12 @@ class RottenTmItemPipeline(object):
             if item['year']:
                 item['year'] = year
         return item
+
+class IgnItemPipeline(object):
+    def process_item(self, item, spider):
+        if isinstance(item, IgnItem):
+            if item['title']:
+                item['title'] = clean_title(item['title'])
+            if item['year']:
+                item['year'] = item['year']
+        return item
