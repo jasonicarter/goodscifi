@@ -18,17 +18,17 @@ class SpiderRT(scrapy.Spider):
     def parse(self, response):
         # ranker.com
         # for title in response.css('h2.listItem__h2'):
-        #     yield {
-        #         'title': title.css('div.listItem__data a.listItem__title::text').extract_first(),
-        #         'year': None
-        #     }
+        #     item = GenericItem()
+        #     item['title'] = title.css('div.listItem__data a.listItem__title::text').extract_first()
+        #     item['year'] = None
+        #     yield item
 
         # scifilists.sffjazz.com
         # for title in response.css('div.dfltc tr'):
-        #     yield {
-        #         'title': title.css('a::text').extract_first(),
-        #         'year': title.css('td::text')[3].extract()
-        #     }
+        #     item = GenericItem()
+        #     item['title'] = title.css('a::text').extract_first()
+        #     item['year'] = title.css('td::text')[3].extract()
+        #     yield item
 
         # world without end lists
         for title in response.xpath('//div[contains(@id,"reportlist")]/center/table/tr/td/table'):
