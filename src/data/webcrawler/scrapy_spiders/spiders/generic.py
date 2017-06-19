@@ -2,7 +2,7 @@ import scrapy
 from scrapy.exceptions import CloseSpider
 from scrapy_spiders.items import GenericItem
 
-class SpiderRT(scrapy.Spider):
+class SpiderGeneric(scrapy.Spider):
     name='generic_com'
 
     # To be used for simple 1 page scraping

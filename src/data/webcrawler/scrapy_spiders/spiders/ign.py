@@ -2,7 +2,7 @@ import scrapy
 from scrapy.exceptions import CloseSpider
 from scrapy_spiders.items import IgnItem
 
-class SpiderOnDVD(scrapy.Spider):
+class SpiderIGN(scrapy.Spider):
     name='ign_com'
 
     start_urls = [
