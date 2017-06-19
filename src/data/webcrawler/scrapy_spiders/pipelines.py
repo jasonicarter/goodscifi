@@ -62,3 +62,12 @@ class IgnItemPipeline(object):
             if item['year']:
                 item['year'] = item['year']
         return item
+
+class GenericItemPipeline(object):
+    def process_item(self, item, spider):
+        if isinstance(item, GenericItem):
+            if item['title']:
+                item['title'] = clean_title(item['title'])
+            if item['year']:
+                item['year'] = re.sub('([0-9]*\.)|[^0-9]','',item['year'])
+        return item

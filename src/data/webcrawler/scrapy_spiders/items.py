@@ -8,6 +8,7 @@
 import scrapy
 
 # Need multiple items due to diff spider data clean up requirements
+# See pipelines.py
 
 class ImdbItem(scrapy.Item):
     title = scrapy.Field()
@@ -22,5 +23,9 @@ class RottenTmItem(scrapy.Item):
     year = scrapy.Field()
 
 class IgnItem(scrapy.Item):
+    title = scrapy.Field()
+    year = scrapy.Field()
+
+class GenericItem(scrapy.Item):
     title = scrapy.Field()
     year = scrapy.Field()
