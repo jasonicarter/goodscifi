@@ -11,8 +11,9 @@ import re
 def clean_title(title):
     if title is None: return None
 
+    # title = title.strip('[S1],[S2],[C]') # Books
+    title = re.sub('([S[0-9]*]|[C[0-9]*])','',title)
     title = title.strip() # Removing leading+trailing white space
-    title = title.strip('[S1],[S2],[C]') # Books
     title = title.replace(' ', '-')
     return title
 
