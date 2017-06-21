@@ -1,6 +1,5 @@
 import os
 import scrapy
-from scrapy.exceptions import CloseSpider
 from scrapy_spiders.pipelines import clean_title
 from dotenv import load_dotenv, find_dotenv
 
@@ -13,13 +12,12 @@ class SpiderWwEnd(scrapy.Spider):
     RAW_DATA_PATH = os.environ.get("RAW_DATA_PATH")
 
     # Used for downloading images
-    # Refactor: pipelines files could be moved into individual spiders
     custom_settings = {
         'ITEM_PIPELINES': {'scrapy.pipelines.images.ImagesPipeline': 1},
         'IMAGES_STORE': RAW_DATA_PATH+'/images',
         'CONCURRENT_REQUESTS': 1,
         'DOWNLOAD_DELAY': 1,
-        }
+    }
 
     def start_requests(self):
         for year_published in range(1930,1932,1):

@@ -9,6 +9,10 @@ class SpiderRT(scrapy.Spider):
         'https://www.rottentomatoes.com/top/bestofrt/top_100_science_fiction__fantasy_movies/',
         ]
 
+    custom_settings = {
+        'ITEM_PIPELINES': {'scrapy_spiders.pipelines.RottenTmItemPipeline':300}
+    }
+
     def parse(self, response):
         # Only 1 page with 100 items to parse
         # Hidden elements causes some issue need to trim - postprocessing

@@ -11,6 +11,10 @@ class SpiderOnDVD(scrapy.Spider):
 
     page_limit = 5
 
+    custom_settings = {
+        'ITEM_PIPELINES': {'scrapy_spiders.pipelines.OnDvdItemPipeline':300}
+    }
+
     def parse(self, response):
         # sum_desc (overall rating)
         # gross_desc (theatrical gross (word wide))

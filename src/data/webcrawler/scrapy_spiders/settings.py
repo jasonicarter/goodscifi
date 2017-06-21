@@ -24,13 +24,9 @@ DOWNLOAD_DELAY = 0.25 # 250 ms of delay
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   # 'scrapy_spiders.pipelines.ScrapySpidersPipeline': 300,
-   'scrapy_spiders.pipelines.ImdbItemPipeline': 300,
-   'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
-   'scrapy_spiders.pipelines.RottenTmItemPipeline': 500,
-   'scrapy_spiders.pipelines.IgnItemPipeline': 600,
-}
+# ITEM_PIPELINES = {
+#    'scrapy_spiders.pipelines.ScrapySpidersPipeline': 300,
+# }
 
 # Configure logs
 LOG_LEVEL = 'INFO'

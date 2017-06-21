@@ -10,6 +10,10 @@ class SpiderIMDB(scrapy.Spider):
         'http://www.imdb.com/search/title?genres=sci_fi&title_type=tv_series&sort=num_votes,desc&page=1&ref_=adv_prv'
     ]
 
+    custom_settings = {
+        'ITEM_PIPELINES': {'scrapy_spiders.pipelines.ImdbItemPipeline':300}
+    }
+
     def parse(self, response):
 
         for title in response.css('div.lister-item-content'):
