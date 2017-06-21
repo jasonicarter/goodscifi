@@ -1,10 +1,13 @@
-goodscifi
+Good Sci-Fi
 ==============================
 
-A deep learning classification model of sci fi content via posters and covers
+A deep learning classification model(s) of science fiction content (movies, tv shows and books) via their marketing posters and covers.
+
+Learn more here:
 
 Project Organization
 ------------
+<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
 
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
@@ -36,6 +39,7 @@ Project Organization
     │   │
     │   ├── data           <- Scripts to download or generate data
     │   │   └── make_dataset.py
+    |   |   └── webcrawler <- Scrapy spiders for extracting data via web crawl
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
@@ -50,7 +54,22 @@ Project Organization
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
 
+Source Data
+------------
+(TODO)
+Movies & TV Shows
+- [The Movie Database]()
+- [IMDB]()
+- [On DVD Releases]()
+- [Ranker]()
+- [RottenTomatoes]()
+- [sffjazz]()
+- [IGN]()
 
---------
+Books
+- [GoodReads]()
+- [World Without End]()
+- [sffjazz]()
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+Install
+------------
