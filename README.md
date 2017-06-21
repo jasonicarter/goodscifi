@@ -105,11 +105,11 @@ Books
 
 **Labelled Data Summary:**
 
-|Movies | TV Shows | Books
----|---|---|---
-**Classic** |0|0|0
-**Good** |0|0|0
-**Bad** |0|0|0
+| | Movies | TV Shows | Books|
+|---|---|---|---|
+|**Classic** |0|0|0|
+|**Good** |0|0|0|
+|**Bad** |0|0|0|
 
 Install
 ------------
