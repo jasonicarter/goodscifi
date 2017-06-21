@@ -70,5 +70,6 @@ class GenericItemPipeline(object):
             if item['title']:
                 item['title'] = clean_title(item['title'])
             if item['year']:
-                item['year'] = re.sub('([0-9]*\.)|[^0-9]','',item['year'])
+                item['year'] = item['year'].split('-')[1] if '-' in item['year'] else item['year']
+                item['year'] = re.sub('([0-9]*\.)|[^0-9]','',item['year'].strip(u'\xa0'))
         return item

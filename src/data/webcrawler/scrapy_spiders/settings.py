@@ -30,7 +30,6 @@ ITEM_PIPELINES = {
    'scrapy_spiders.pipelines.OnDvdItemPipeline': 400,
    'scrapy_spiders.pipelines.RottenTmItemPipeline': 500,
    'scrapy_spiders.pipelines.IgnItemPipeline': 600,
-   'scrapy_spiders.pipelines.GenericItemPipeline': 700,
 }
 
 # Configure logs
