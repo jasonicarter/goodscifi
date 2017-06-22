@@ -1,10 +1,10 @@
-
 import tmdbsimple as tmdb
 import os
 from dotenv import load_dotenv, find_dotenv
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
 import logging
+import click
 
 def init():
     # Find .env automagically by walking up directories until it's found
@@ -34,6 +34,13 @@ def get_genre_id(search_term):
 
     return genre_ids
 
+def isValidStr(str_to_test):
+    if str_to_test is None: return False
+    if str_to_test == "": return False
+    if str_to_test == " ": return False
+
+    return True
+
 def build_poster_url_and_filename(base_image_url, poster_path, title, date, tmdb_id):
     '''
     Build the full image url and new filename for poster
@@ -45,6 +52,11 @@ def build_poster_url_and_filename(base_image_url, poster_path, title, date, tmdb
         tmdb_id: id associated to tv show or movie
     Returns: strings poster_url and poster_filename
     '''
+    # Some poster_path has NoneType so check everything and skip issue items
+    valid_str_test = [poster_path, title, date, tmdb_id]
+    if sum(list(map(isValidStr, valid_str_test))) != len(valid_str_test):
+        return None, None
+
     # Replace spaces in title with '-', convert the rest to strings
     fname = [title, date, tmdb_id]
     poster_filename = ('_').join([str(w).replace(' ','-') for w in fname])+'.jpg'
@@ -68,7 +80,13 @@ def get_tv_movie_results(medium, with_genres, discvr=tmdb.Discover(), page=1):
         discvr.movie(page=page, with_genres=with_genres)
     return discvr
 
-def get_posters(search_term, medium='movie', page_limit=None, output_filepath='/'):
+
+@click.command()
+@click.argument('search_term', default='sci')
+@click.argument('medium', default='movie')
+@click.argument('page_limit', default=1)
+@click.argument('output_filepath', envvar='TMDB_RAW_DATA_PATH')
+def get_posters(search_term, medium, page_limit, output_filepath):
 
     logger = logging.getLogger(__name__)
     logger.info('getting configurations')
@@ -94,7 +112,7 @@ def get_posters(search_term, medium='movie', page_limit=None, output_filepath='/
                      'movie':['poster_path','title', 'release_date', 'id']}
 
     # Used for testing mostly
-    total_pages = total_pages if page_limit is None else page_limit
+    total_pages = total_pages if page_limit == 0 else page_limit
 
     logger.info('Pulling poster images from: '+str(total_pages)+' page(s)')
     # Loop over each page (get page one again) and then all results on each page
@@ -110,9 +128,12 @@ def get_posters(search_term, medium='movie', page_limit=None, output_filepath='/
                 discover.results[item][tv_movie_attr[medium][3]]
             )
 
-            local_path = output_filepath+poster_filename
-            # return t/f and sum them to assert len(discover.results) == sum???
-            download_image(poster_url, local_path)
+            if (poster_url != None) and (poster_filename != None):
+                local_path = output_filepath+poster_filename
+                download_image(poster_url, local_path)
+            else:
+                logger.warning('Item skipped. Poster URL: ' + str(poster_url) +\
+                    ' Poster Filename: ' + str(poster_filename))
 
         logger.info('**********'+' Completed Page '+str(page)+' **********')
 
@@ -121,5 +142,5 @@ if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    output_filepath = os.environ.get("TMDB_RAW_DATA_PATH")
-    get_posters('sci', page_limit=1, output_filepath=output_filepath)
+    load_dotenv(find_dotenv())
+    get_posters()
