@@ -74,10 +74,15 @@ def download_image(image_url, local_path):
         print(err, image_url)
 
 def get_tv_movie_results(medium, with_genres, discvr=tmdb.Discover(), page=1):
+    kwargs = {
+        'page': page, 'with_genres': with_genres, 'original_language': 'en',
+        'release_date_lte': '2017-08-01' # TODO: parameterize release date
+    }
+
     if medium == 'tv':
-        discvr.tv(page=page, with_genres=with_genres)
+        discvr.tv()
     else:
-        discvr.movie(page=page, with_genres=with_genres)
+        discvr.movie()
     return discvr
 
 
