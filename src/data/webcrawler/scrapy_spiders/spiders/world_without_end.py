@@ -20,7 +20,7 @@ class SpiderWwEnd(scrapy.Spider):
     }
 
     def start_requests(self):
-        for year_published in range(1930,1932,1):
+        for year_published in range(1930, 2018, 1):
             yield scrapy.Request(\
             'https://www.worldswithoutend.com/lists_booksbyyear.asp?p=1&YearPublished=%s&Genre=SF&NovelType=1&Nominated='\
             % year_published)
