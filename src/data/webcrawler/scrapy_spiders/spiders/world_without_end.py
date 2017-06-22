@@ -14,7 +14,7 @@ class SpiderWwEnd(scrapy.Spider):
     # Used for downloading images
     custom_settings = {
         'ITEM_PIPELINES': {'scrapy.pipelines.images.ImagesPipeline': 1},
-        'IMAGES_STORE': RAW_DATA_PATH+'/images',
+        'IMAGES_STORE': RAW_DATA_PATH+'/wwend_books',
         'CONCURRENT_REQUESTS': 1,
         'DOWNLOAD_DELAY': 1,
     }
@@ -27,15 +27,15 @@ class SpiderWwEnd(scrapy.Spider):
 
     def parse(self, response):
         for title in response.xpath('//div[contains(@id,"reportlist")]/table/tr/td/table/td'):
-
-            yield {
-                'title': clean_title(title.css('table tr td p a::text').extract_first()),
-                # Using url obtained from pagination html - index should be okay
-                'year': response.url[
-                    response.url.find('YearPublished=')+14:response.url.find('&Genre=')],
-                'image_urls': ['https://www.worldswithoutend.com/'+\
-                    title.css('table tr div.awardslisting img::attr(src)').extract_first()]
-            }
+            if title.css('table tr div.awardslisting img') != []:
+                yield {
+                    'title': clean_title(title.css('table tr td p a::text').extract_first()),
+                    # Using url obtained from pagination html - index should be okay
+                    'year': response.url[
+                        response.url.find('YearPublished=')+14:response.url.find('&Genre=')],
+                    'image_urls': ['https://www.worldswithoutend.com/'+\
+                        title.css('table tr div.awardslisting img::attr(src)').extract_first()]
+                }
 
         # follow pagination links
         for href in response.css('div.content a::attr(href)'):
