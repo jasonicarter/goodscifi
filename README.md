@@ -103,13 +103,40 @@ Books
   - Best Science Fiction (500)
   - Most Popular Science Fiction on GoodReads (100)
 
-**Labelled Data Summary:**
+**Raw Data Summary:**
 
 | | Movies | TV Shows | Books|
 |---|---|---|---|
-|**Classic** |0|0|0|
 |**Good** |0|0|0|
-|**Bad** |0|0|0|
+|**Other** |0|0|0|
+|**TOTALS** |5612|950|7900|
+
 
 Install
 ------------
+
+Replicate Dataset
+------------
+**Get Full List of Movies/TV Shows**
+
+To run query using the search term 'sci' for medium 'tv' with '0' page limit:
+
+```
+# page_limit = 0 means retrieve all pages
+# page_limit = 2 means retrieve 2 pages and not "retrieve page 2"
+# output_filepath = defaulted to environment variable
+
+$ python tmdb_posters.py 'sci' 'tv' 0
+$ python tmdb_posters.py 'sci' 'movie' 1 '/my/full/path/movies/'
+```
+
+**Get Full List of Books**
+
+To run spider first `cd` to webcrawler directory then simply type in the below:
+
+```
+# wwend_com is the spider name which can be found in each spider file
+# output path of downloaded images is set as a custom setting within the spider file
+
+$ scrapy crawl wwend_com -o '/my/full/path/all_books.json'
+```
