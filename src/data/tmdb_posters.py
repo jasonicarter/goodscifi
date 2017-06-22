@@ -53,7 +53,7 @@ def build_poster_url_and_filename(base_image_url, poster_path, title, date, tmdb
     Returns: strings poster_url and poster_filename
     '''
     # Some poster_path has NoneType so check everything and skip issue items
-    valid_str_test = [poster_path, title, date, tmdb_id]
+    valid_str_test = [poster_path, title, tmdb_id]
     if sum(list(map(isValidStr, valid_str_test))) != len(valid_str_test):
         return None, None
 
@@ -75,14 +75,14 @@ def download_image(image_url, local_path):
 
 def get_tv_movie_results(medium, with_genres, discvr=tmdb.Discover(), page=1):
     kwargs = {
-        'page': page, 'with_genres': with_genres, 'original_language': 'en',
+        'page': page, 'with_genres': with_genres, 'with_original_language': 'en',
         'release_date_lte': '2017-08-01' # TODO: parameterize release date
     }
 
     if medium == 'tv':
-        discvr.tv()
+        discvr.tv(**kwargs)
     else:
-        discvr.movie()
+        discvr.movie(**kwargs)
     return discvr
 
 
@@ -119,7 +119,8 @@ def get_posters(search_term, medium, page_limit, output_filepath):
     # Used for testing mostly
     total_pages = total_pages if page_limit == 0 else page_limit
 
-    logger.info('Pulling poster images from: '+str(total_pages)+' page(s)')
+    logger.info('Pulling poster images from: '+str(total_pages)+' page(s) ' +\
+        'with '+str(total_results)+' total results')
     # Loop over each page (get page one again) and then all results on each page
     for page in range(1, total_pages+1):
         discover = get_tv_movie_results(medium, with_genres, discover, page)
