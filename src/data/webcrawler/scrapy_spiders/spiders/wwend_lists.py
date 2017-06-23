@@ -14,7 +14,6 @@ class SpiderWwendList(scrapy.Spider):
         'https://www.worldswithoutend.com/lists_sf101.asp',
         'https://www.worldswithoutend.com/lists_locus_bestsf.asp',
         'https://www.worldswithoutend.com/lists_EastonPress.asp',
-        'https://www.worldswithoutend.com/lists_200SFBooksByWomen.asp',
     ]
 
     custom_settings = {
