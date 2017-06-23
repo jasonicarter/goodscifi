@@ -9,7 +9,7 @@ class SpiderIGN(scrapy.Spider):
         'http://www.ign.com/lists/best-science-fiction-movies/1'
     ]
 
-    page_limit = 3
+    page_limit = 100
 
     # Site blocks scrapy
     custom_settings = {
