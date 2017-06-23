@@ -9,7 +9,7 @@ class SpiderOnDVD(scrapy.Spider):
         'https://www.ondvdreleases.com/best-sci-fi-movies/page/1'
     ]
 
-    page_limit = 5
+    page_limit = 20
 
     custom_settings = {
         'ITEM_PIPELINES': {'scrapy_spiders.pipelines.OnDvdItemPipeline':300}
