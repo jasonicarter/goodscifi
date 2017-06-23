@@ -7,7 +7,9 @@ class SpiderIMDB(scrapy.Spider):
 
     start_urls = [
         'http://www.imdb.com/search/title?genres=sci_fi&title_type=feature&page=1&sort=boxoffice_gross_us,desc&ref_=adv_prv',
-        'http://www.imdb.com/search/title?genres=sci_fi&title_type=tv_series&sort=num_votes,desc&page=1&ref_=adv_prv'
+        'http://www.imdb.com/search/title?genres=sci_fi&title_type=feature&page=1&sort=moviemeter,asc&ref_=adv_prv',
+        'http://www.imdb.com/search/title?genres=sci_fi&title_type=tv_series&sort=num_votes,desc&page=1&ref_=adv_prv',
+        'http://www.imdb.com/search/title?genres=sci_fi&title_type=tv_series&page=1&sort=moviemeter,asc&ref_=adv_prv'
     ]
 
     custom_settings = {
@@ -30,5 +32,5 @@ class SpiderIMDB(scrapy.Spider):
             yield response.follow(href, self.parse)
 
     def enforce_page_limit(self, response):
-        if '&page=1&' in str(response.body):
+        if '&page=4&' in str(response.body):
             raise CloseSpider('reached requested page limit')
