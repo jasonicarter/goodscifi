@@ -15,8 +15,8 @@ class SpiderWwEnd(scrapy.Spider):
     custom_settings = {
         'ITEM_PIPELINES': {'scrapy.pipelines.images.ImagesPipeline': 1},
         'IMAGES_STORE': RAW_DATA_PATH+'/wwend_books',
-        'CONCURRENT_REQUESTS': 1,
-        'DOWNLOAD_DELAY': 1,
+        # 'CONCURRENT_REQUESTS': 1,
+        # 'DOWNLOAD_DELAY': 1,
     }
 
     def start_requests(self):
@@ -33,8 +33,9 @@ class SpiderWwEnd(scrapy.Spider):
                     # Using url obtained from pagination html - index should be okay
                     'year': response.url[
                         response.url.find('YearPublished=')+14:response.url.find('&Genre=')],
+                        # replace 'covers_md' with 'covers'
                     'image_urls': ['https://www.worldswithoutend.com/'+\
-                        title.css('table tr div.awardslisting img::attr(src)').extract_first()]
+                        title.css('table tr div.awardslisting img::attr(src)').extract_first().replace('covers_md', 'covers')]
                 }
 
         # follow pagination links
