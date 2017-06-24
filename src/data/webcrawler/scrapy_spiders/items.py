@@ -13,6 +13,8 @@ import scrapy
 class ImdbItem(scrapy.Item):
     title = scrapy.Field()
     year = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
 
 class OnDvdItem(scrapy.Item):
     title = scrapy.Field()
