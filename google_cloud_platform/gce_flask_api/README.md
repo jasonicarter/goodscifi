@@ -28,7 +28,7 @@ curl -X POST -H "Content-Type: application/json" -d @- http://0.0.0.0:5000
 ```
 $ docker build -t [name] .
 $ docker tag [name] [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
-$ gcloud docker --push [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
+$ gcloud docker -- push [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
 ```
 - Hostname => us.gci.io
 - Project_ID => gcloud projects list
