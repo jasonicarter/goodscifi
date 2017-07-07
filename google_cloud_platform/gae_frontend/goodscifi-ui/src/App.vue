@@ -1,5 +1,5 @@
 <!--
-Borrowed from Jecelyn Yeen
+Inspired by Jecelyn Yeen
 https://github.com/chybie/file-upload-vue
 https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 -->
@@ -7,24 +7,24 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 <!-- HTML Template -->
 <template>
   <div id="app">
-    <div class="container">
+    <div class="app-center-div">
+      <h1>GOOD SCI-FI</h1>
+      <span>Judging books by their covers since July 1st, 2017</span>
       <!-- Upload -->
       <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-        <h1>Good Sci-Fi AI</h1>
-        <span>Judging books by their cover since July 1st, 2017</span>
         <div class="dropbox">
           <input type="file" :name="uploadFileName" :disabled="isSaving"
             @change="filesChange($event.target.name, $event.target.files);
             " accept="image/*" class="input-file">
 
-            <p v-if="isInitial">
-              Drag your file here to begin<br> or click to browser
-            </p>
-            <p v-if="isSaving">
-              Judging a book by it's cover...
-            </p>
-
-            <!-- <img src="" height="200" alt="Image preview..."> -->
+            <div class='dropbox-message'>
+              <p v-if="isInitial">
+                Drag your file here to begin<br> or click to browser
+              </p>
+              <p v-if="isSaving">
+                Judging a book by it's cover...
+              </p>
+            </div>
 
         </div>
       </form>
@@ -52,15 +52,14 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
          <pre>{{ uploadError }}</pre>
        </div>
      </div>
+
    </div>
 </template>
 
 
 <!-- JavaScript -->
 <script>
-  // swap as you need
-  import { wait } from './utils';
-  // import { upload } from './file-upload.fake.service';
+  import { wait } from './utils'; // TODO: remove this
   import * as axios from 'axios';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -166,15 +165,22 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- Styling -->
 <style lang="css">
+  .app-center-div {
+    margin: 0 auto;
+    max-width: 800px;
+    text-align: center;
+  }
+
   .dropbox {
-    outline: 1px dashed grey;
     outline-offset: -5px;
     background: whitesmoke;
     color: dimgray;
     padding: 10px 10px;
-    min-height: 200px; /* minimum height */
+    max-width: 800px;
+    max-height: 200px;
     position: relative;
     cursor: pointer;
+    border-radius: 5px;
   }
 
   .input-file {
@@ -183,6 +189,13 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     height: 200px;
     position: absolute;
     cursor: pointer;
+    top: 0px;
+    left: 0px;
+  }
+
+  .dropbox-message {
+    display: inline-block;
+    padding: 50px;
   }
 
   .dropbox:hover {
@@ -190,8 +203,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   }
 
   .dropbox p {
-    font-size: 1.2em;
-    text-align: center;
-    padding: 50px 0;
+    font-size: 1em;
   }
 </style>
