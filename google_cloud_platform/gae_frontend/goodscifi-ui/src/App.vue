@@ -10,47 +10,39 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     <div class="app-center-div">
       <h1>GOOD SCI-FI</h1>
       <span>Judging books by their covers since July 1st, 2017</span>
+
       <!-- Upload -->
-      <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
+      <form enctype="multipart/form-data" novalidate>
         <div class="dropbox">
           <input type="file" :name="uploadFileName" :disabled="isSaving"
             @change="filesChange($event.target.name, $event.target.files);
-            " accept="image/*" class="input-file">
+            "accept="image/*" class="input-file">
 
             <div class='dropbox-message'>
-              <p v-if="isInitial">
-                Drag your file here to begin<br> or click to browser
+              <p v-if="isInitial || isSuccess">
+                Drag your file here<br>or click to browser
               </p>
               <p v-if="isSaving">
                 Judging a book by it's cover...
               </p>
+              <p v-if="isFailed">
+                Upload has failed<br>Please check your file and try again
+                <pre>{{ uploadError }}</pre>
+              </p>
             </div>
-
         </div>
       </form>
 
       <!--SUCCESS-->
        <div v-if="isSuccess">
-         <h2>Uploaded {{ uploadedFiles.length }} file(s) successfully.</h2>
-         <p>
-           <a href="javascript:void(0)" @click="reset()">Upload again</a>
-         </p>
          <ul class="list-unstyled">
            <li v-for="item in uploadedFiles">
-             <p>{{ item.description }} {{ item.probability }}</p>
-             <img :src="item.url" class="img-responsive img-thumbnail" :alt="item.fileName">
+             <img :src="item.url" class="img-left img-thumbnail" :alt="item.fileName">
+             <p class="probability">{{ item.probability['good']*100 }} %</p>
            </li>
          </ul>
        </div>
 
-       <!--FAILED-->
-       <div v-if="isFailed">
-         <h2>Uploaded failed.</h2>
-         <p>
-           <a href="javascript:void(0)" @click="reset()">Try again</a>
-         </p>
-         <pre>{{ uploadError }}</pre>
-       </div>
      </div>
 
    </div>
@@ -60,6 +52,7 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 <!-- JavaScript -->
 <script>
   import { wait } from './utils'; // TODO: remove this
+  import { upload } from './file-upload.fake.service'; //TODO: remove this
   import * as axios from 'axios';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -101,9 +94,27 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         this.currentStatus = STATUS_SAVING;
         // TODO: google storage / datastore save data
 
-        this.get_predictions(formData)
+        //TODO: remove below
+
+        upload(formData)
+          .then(wait(1500))
+          .then(x => {
+            this.uploadedFiles = [].concat(x);
+            this.currentStatus = STATUS_SUCCESS; //STATUS_FAILED;
+            // this.uploadError = "This is a fake error response. "
+          })
+          .catch(err => {
+            this.uploadError = err.response;
+            this.currentStatus = STATUS_FAILED;
+          });
+
+        //TODO: remove above
+        // this.get_predictions(formData)
       },
       filesChange(fieldName, fileList) {
+        // reset after error message and upload attempted
+        this.reset();
+
         // handle file changes
         const formData = new FormData();
 
@@ -205,4 +216,24 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   .dropbox p {
     font-size: 1em;
   }
+
+  .img-left {
+   float: left;
+    padding: 1px;
+    width: 150px;
+    background-color: darkgrey;
+    margin-right: 5px;
+  }
+
+  .probability {
+    font-size: 5em;
+    float: left;
+    margin-top: 0px;
+  }
+
+  .list-unstyled {
+    list-style: none;
+    padding: 0px;
+  }
+
 </style>

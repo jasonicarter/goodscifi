@@ -4,7 +4,8 @@ function upload(formData) {
         .then(img => ({
             id: img,
             fileName: x.name,
-            predictions: { good: 0.90, not_good: 0.10 },
+            description: x.name,
+            probability: { good: 0.90, not_good: 0.10 },
             url: img
         })));
     return Promise.all(promises);
