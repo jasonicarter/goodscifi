@@ -41,6 +41,6 @@ POST api.goodscifi.com/v1/books/ #returns book_id
 GET api.goodscifi.com/v1/books/<book_id>/predictions #returns predictions
 GET api.goodscifi.com/v1/movies/predictions?filter_by=recent
 '''
-
+#TODO: debug=False
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
