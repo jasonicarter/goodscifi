@@ -4,10 +4,10 @@ import model
 import base64
 import logging
 
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 api = Blueprint('api', app, url_prefix='/api/v1')
 
