@@ -37,5 +37,7 @@ Once on your GCE server...
 ```
 $ curl -sSL https://get.docker.com | sh
 $ gcloud docker pull [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
-$ docker run -td -p 80:80 [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
+$ sudo docker run -td -p 80:80 [HOSTNAME]/[PROJECT_ID]/[DOCKER IMAGE NAME]
+$ sudo docker ps #get container ID
+$ sudo docker logs --follow [container_ID] 
 ```
