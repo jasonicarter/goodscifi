@@ -11,8 +11,8 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     <span>Judging books by their covers since July 1st, 2017</span>
     <div class="app-center-div center-content">
       <!-- Upload -->
-      <form enctype="multipart/form-data" novalidate>
-        <div class="dropbox prediction-results">
+      <form class="prediction-results center-content" enctype="multipart/form-data" novalidate>
+        <div class="dropbox center-content">
           <input type="file" :name="uploadFileName" :disabled="isSaving"
             @change="filesChange($event.target.name, $event.target.files);
             "accept="image/*" class="input-file">
@@ -34,19 +34,23 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
       <!--SUCCESS-->
        <div class="center-content prediction-results">
-         <img v-if="isSuccess" :src="uploadedImage.url"
-              class="img-left img-thumbnail" :alt="uploadedImage.fileName">
-         <img v-if="isInitial || isSaving" src="./assets/transparent.png"
-              class="img-thumbnail img-placeholder" alt="placeholder image">
+         <div class="probability">
+           <img v-if="isSuccess" :src="uploadedImage.url"
+                class="img-left img-thumbnail" :alt="uploadedImage.fileName">
+            <p v-if="isInitial || isSaving">
+              AI Stuff<br>...Happens
+            </p>
+          </div>
        </div>
 
        <!-- PROBABILITY  -->
        <div class="center-content prediction-results">
-             <div class="probability center-content probability-box">
-               <p>
-                 <span v-if="isSuccess">{{ uploadedImage.probability }}%</span>
+             <div class="probability">
+               <span v-if="isSuccess" class="prob step">{{ uploadedImage.probability }}%</span>
+               <p v-if="isInitial || isSaving">
+                 Good Sci-Fi</br>???
                </p>
-               <p class="label">GOOD SCI-FI</p>
+
              </div>
        </div>
 
@@ -211,8 +215,8 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     background: whitesmoke;
     color: dimgray;
     padding: 10px 10px;
-    max-width: 150px;
-    max-height: 200px;
+    max-width: 170px;
+    max-height: 220px;
     position: relative;
     cursor: pointer;
     border-radius: 5px;
@@ -224,6 +228,7 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   }
   .dropbox:hover {
     background: lightgrey;
+    height: 200px;
   }
   .dropbox p {
     font-size: 1em;
@@ -247,22 +252,21 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   }
   .img-thumbnail {
     width: 170px;
-    height: 200px;
-  }
-  .img-placeholder {
-    background-color: whitesmoke;
+    height: 220px;
+    margin: 0;
+    object-fit: cover;
   }
 
   .probability {
-    font-weight: normal;
-    float: left;
+    font-weight: lighter;
+    color: dimgray;
   }
   .probability span {
     font-size: 3em;
     font-weight: lighter;
   }
   .probability-box {
-    width: 150px;
+    width: 170px;
     height: 200px;
     background-color: whitesmoke
   }
@@ -285,6 +289,18 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   .prediction-results {
     margin-left: 25px;
     margin-right: 25px;
+    min-width: 170px;
+    min-height: 220px;
+    background-color: whitesmoke;
+    border-radius: 5px;
+  }
+  .prediction-results span.step {
+    font-size: 8em;
+    color: gray;
+  }
+  .prediction-results span.prob {
+    font-size: 5em;
+    /*color: gray;*/
   }
 
 </style>
