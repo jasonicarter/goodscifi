@@ -10,7 +10,7 @@ RUN apt-get install -y nginx supervisor
 
 RUN service supervisor stop
 
-# create virtual env and install dependencies
+# Create virtual env and install dependencies
 # Due to a bug with h5 we install Cython first
 RUN virtualenv /opt/venv
 ADD ./requirements.txt /opt/venv/requirements.txt
@@ -26,10 +26,10 @@ ADD ./supervisord.conf /etc/supervisord.conf
 ADD ./nginx.conf /etc/nginx/nginx.conf
 
 # Copy our service code
-ADD ./service /opt/app
+ADD ./api /opt/app
 
-# restart nginx to load the config
+# Restart nginx to load the config
 RUN service nginx stop
 
-# start supervisor to run our wsgi server
+# Start supervisor to run our wsgi server
 CMD supervisord -c /etc/supervisord.conf -n
