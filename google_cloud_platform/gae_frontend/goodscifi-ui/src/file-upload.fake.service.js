@@ -5,7 +5,7 @@ function upload(formData) {
             id: img,
             fileName: x.name,
             description: x.name,
-            probability: { good: 0.90, not_good: 0.10 },
+            probability: { good: 90, not_good: 10 },
             url: img
         })));
     return Promise.all(promises);

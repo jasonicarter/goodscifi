@@ -7,13 +7,12 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 <!-- HTML Template -->
 <template>
   <div id="app">
-    <div class="app-center-div">
-      <h1>GOOD SCI-FI</h1>
-      <span>Judging books by their covers since July 1st, 2017</span>
-
+    <h1>GOOD SCI-FI</h1>
+    <span>Judging books by their covers since July 1st, 2017</span>
+    <div class="app-center-div center-content">
       <!-- Upload -->
       <form enctype="multipart/form-data" novalidate>
-        <div class="dropbox">
+        <div class="dropbox prediction-results">
           <input type="file" :name="uploadFileName" :disabled="isSaving"
             @change="filesChange($event.target.name, $event.target.files);
             "accept="image/*" class="input-file">
@@ -34,13 +33,21 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
       </form>
 
       <!--SUCCESS-->
-       <div v-if="isSuccess">
-         <ul class="list-unstyled">
-           <li v-for="item in uploadedFiles">
-             <img :src="item.url" class="img-left img-thumbnail" :alt="item.fileName">
-             <p class="probability">{{ item.probability['good']*100 }} %</p>
-           </li>
-         </ul>
+       <div class="center-content prediction-results">
+         <img v-if="isSuccess" :src="uploadedImage.url"
+              class="img-left img-thumbnail" :alt="uploadedImage.fileName">
+         <img v-if="isInitial || isSaving" src="./assets/transparent.png"
+              class="img-thumbnail img-placeholder" alt="placeholder image">
+       </div>
+
+       <!-- PROBABILITY  -->
+       <div class="center-content prediction-results">
+             <div class="probability center-content probability-box">
+               <p>
+                 <span v-if="isSuccess">{{ uploadedImage.probability }}%</span>
+               </p>
+               <p class="label">GOOD SCI-FI</p>
+             </div>
        </div>
 
      </div>
@@ -51,8 +58,8 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- JavaScript -->
 <script>
-  import { wait } from './utils'; // TODO: remove this
-  import { upload } from './file-upload.fake.service'; //TODO: remove this
+  // import { wait } from './utils'; // TODO: remove this
+  // import { upload } from './file-upload.fake.service'; //TODO: remove this
   import * as axios from 'axios';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -62,9 +69,10 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     data() {
       return {
         uploadedFiles: [],
+        uploadedImage: {},
         uploadError: null,
         currentStatus: null,
-        uploadFileName: 'photos',
+        uploadFileName: 'images',
         result: {}
       }
     },
@@ -95,21 +103,20 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         // TODO: google storage / datastore save data
 
         //TODO: remove below
-
-        upload(formData)
-          .then(wait(1500))
-          .then(x => {
-            this.uploadedFiles = [].concat(x);
-            this.currentStatus = STATUS_SUCCESS; //STATUS_FAILED;
-            // this.uploadError = "This is a fake error response. "
-          })
-          .catch(err => {
-            this.uploadError = err.response;
-            this.currentStatus = STATUS_FAILED;
-          });
-
+        // upload(formData)
+        //   .then(wait(1500))
+        //   .then(x => {
+        //     this.uploadedFiles = [].concat(x);
+        //     this.currentStatus = STATUS_SUCCESS; //STATUS_FAILED;
+        //     // this.uploadError = "This is a fake error response. "
+        //   })
+        //   .catch(err => {
+        //     this.uploadError = err.response;
+        //     this.currentStatus = STATUS_FAILED;
+        //   });
         //TODO: remove above
-        // this.get_predictions(formData)
+
+        this.get_predictions(formData)
       },
       filesChange(fieldName, fileList) {
         // reset after error message and upload attempted
@@ -131,9 +138,10 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         this.save(formData);
       },
       get_predictions(formData) {
-          const BASE_URL = 'http://localhost:5000';
-          const file = formData.get('photos');
-          const url = `${BASE_URL}`;
+          // const BASE_URL = 'http://localhost:5000';
+          const BASE_URL = 'http://api.goodscifi.com/api/v1';
+          const file = formData.get('images');
+          const url = `${BASE_URL}/books`;
           const fReader = new FileReader();
 
           fReader.onload = () => {
@@ -150,12 +158,16 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
                   .then(x => x.data['predictions'])
                   .then(x =>
                       x.map(img =>
-                        Object.assign({}, img, {url: img_url})
+                        Object.assign({}, img,
+                          {probability: Math.floor(img.probability)},
+                          {url: img_url})
                       )
                   )
                   .then(x => {
-                    this.uploadedFiles = [].concat(x);
+                    this.uploadedFiles = [].concat(x[0]); //TODO: remove index
+                    this.uploadedImage = x[0];
                     this.currentStatus = STATUS_SUCCESS;
+                    console.log(x)
                   })
                   .catch(err => {
                     this.uploadError = err.response;
@@ -176,10 +188,22 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- Styling -->
 <style lang="css">
-  .app-center-div {
+  #app {
     margin: 0 auto;
+    margin-top: 100px;
     max-width: 800px;
     text-align: center;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .app-center-div {
+    margin-top: 5%;
+  }
+  .app-center-div h1 {
+    font-size: 3em;
+  }
+  .app-center-div span {
+    font-weight: lighter;
   }
 
   .dropbox {
@@ -187,53 +211,80 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     background: whitesmoke;
     color: dimgray;
     padding: 10px 10px;
-    max-width: 800px;
+    max-width: 150px;
     max-height: 200px;
     position: relative;
     cursor: pointer;
     border-radius: 5px;
   }
+  .dropbox-message {
+    display: inline-block;
+    font-weight: lighter;
+    margin: 40px 20px;
+  }
+  .dropbox:hover {
+    background: lightgrey;
+  }
+  .dropbox p {
+    font-size: 1em;
+  }
 
   .input-file {
     opacity: 0;
     width: 100%;
-    height: 200px;
+    height: 220px;
     position: absolute;
     cursor: pointer;
     top: 0px;
     left: 0px;
   }
 
-  .dropbox-message {
-    display: inline-block;
-    padding: 50px;
-  }
-
-  .dropbox:hover {
-    background: lightgrey;
-  }
-
-  .dropbox p {
-    font-size: 1em;
-  }
-
   .img-left {
-   float: left;
+    float: left;
     padding: 1px;
-    width: 150px;
     background-color: darkgrey;
     margin-right: 5px;
   }
+  .img-thumbnail {
+    width: 170px;
+    height: 200px;
+  }
+  .img-placeholder {
+    background-color: whitesmoke;
+  }
 
   .probability {
-    font-size: 5em;
+    font-weight: normal;
     float: left;
-    margin-top: 0px;
+  }
+  .probability span {
+    font-size: 3em;
+    font-weight: lighter;
+  }
+  .probability-box {
+    width: 150px;
+    height: 200px;
+    background-color: whitesmoke
+  }
+
+  .label {
+    font-weight: lighter;
   }
 
   .list-unstyled {
     list-style: none;
     padding: 0px;
+  }
+
+  .center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .prediction-results {
+    margin-left: 25px;
+    margin-right: 25px;
   }
 
 </style>
