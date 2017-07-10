@@ -6,55 +6,71 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- HTML Template -->
 <template>
-  <div id="app">
-    <h1>GOOD SCI-FI</h1>
-    <span>Judging books by their covers since July 1st, 2017</span>
-    <div class="app-center-div center-content">
-      <!-- Upload -->
-      <form class="prediction-results center-content" enctype="multipart/form-data" novalidate>
-        <div class="dropbox center-content">
-          <input type="file" :name="uploadFileName" :disabled="isSaving"
-            @change="filesChange($event.target.name, $event.target.files);
-            "accept="image/*" class="input-file">
+  <div id="app" class="container">
 
-            <div class='dropbox-message'>
-              <p v-if="isInitial || isSuccess">
-                Drag your file here<br>or click to browser
-              </p>
-              <p v-if="isSaving">
-                Judging a book by it's cover...
-              </p>
-              <p v-if="isFailed">
-                Upload has failed<br>Please check your file and try again
-                <pre>{{ uploadError }}</pre>
-              </p>
-            </div>
-        </div>
-      </form>
+    <div id="header-row" class="row">
+      <div class="twelve columns">
+        <h1>GOOD SCI-FI</h1>
+        Judging books by their covers since July 1st, 2017</br>
+        <span class="disclaimer">Good Sci-Fi is a machine learning, science fiction,
+          book cover image classifier.</br>
+        Open-sourced and openly discussed, personal project on
+        <a href="https://github.com/jasonicarter">Github</a> and
+        <a href="https://medium.com/towards-data-science/4-months-of-machine-deep-learning-89f6ab56a2fd">
+          Medium.</a></span>
+      </div>
+    </div>
 
-      <!--SUCCESS-->
-       <div class="center-content prediction-results">
-         <div class="probability">
-           <img v-if="isSuccess" :src="uploadedImage.url"
-                class="img-left img-thumbnail" :alt="uploadedImage.fileName">
-            <p v-if="isInitial || isSaving">
-              AI Stuff<br>...Happens
-            </p>
+    <div id="prediction-row" class="row">
+      <!-- UPLOAD -->
+      <div class="one-third column center-content">
+        <form class="prediction-results center-content" enctype="multipart/form-data" novalidate>
+          <div class="dropbox center-content">
+            <input type="file" :name="uploadFileName" :disabled="isSaving"
+              @change="filesChange($event.target.name, $event.target.files);
+              "accept="image/*" class="input-file">
+
+              <div class='dropbox-message'>
+                <p v-if="isInitial || isSuccess">
+                  Drag your file here<br>or click to browser
+                </p>
+                <p v-if="isSaving">
+                  Judging a book by it's cover...
+                </p>
+                <p v-if="isFailed">
+                  Upload has failed<br>Please check your file and try again
+                  <pre>{{ uploadError }}</pre>
+                </p>
+              </div>
           </div>
-       </div>
+        </form>
+      </div>
 
-       <!-- PROBABILITY  -->
-       <div class="center-content prediction-results">
-             <div class="probability">
-               <span v-if="isSuccess" class="prob step">{{ uploadedImage.probability }}%</span>
-               <p v-if="isInitial || isSaving">
-                 Good Sci-Fi</br>???
-               </p>
+      <!-- SUCCESS -->
+      <div class="one-third column center-content">
+        <div class="prediction-results center-content ">
+          <div class="probability">
+            <img v-if="isSuccess" :src="uploadedImage.url"
+                 class="img-left img-thumbnail" :alt="uploadedImage.fileName">
+             <p v-if="isInitial || isSaving">
+               AI Stuff<br>...Happens
+             </p>
+           </div>
+        </div>
+      </div>
 
-             </div>
-       </div>
-
-     </div>
+      <!-- PROBABILITY -->
+      <div class="one-third column center-content">
+        <div class="prediction-results center-content ">
+              <div class="probability">
+                <span v-if="isSuccess" class="prob">{{ uploadedImage.probability }}%</span>
+                <p v-if="isInitial || isSaving">
+                  Good Sci-Fi</br>...???
+                </p>
+              </div>
+        </div>
+      </div>
+    </div>
 
    </div>
 </template>
@@ -192,22 +208,14 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- Styling -->
 <style lang="css">
-  #app {
-    margin: 0 auto;
-    margin-top: 100px;
-    max-width: 800px;
+  #header-row {
+    margin-top: 10%;
     text-align: center;
-    font-family: 'Roboto', sans-serif;
   }
-
-  .app-center-div {
-    margin-top: 5%;
-  }
-  .app-center-div h1 {
-    font-size: 3em;
-  }
-  .app-center-div span {
-    font-weight: lighter;
+  #prediction-row {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    text-align: center;
   }
 
   .dropbox {
@@ -240,8 +248,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     height: 220px;
     position: absolute;
     cursor: pointer;
-    top: 0px;
-    left: 0px;
   }
 
   .img-left {
@@ -271,10 +277,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     background-color: whitesmoke
   }
 
-  .label {
-    font-weight: lighter;
-  }
-
   .list-unstyled {
     list-style: none;
     padding: 0px;
@@ -287,20 +289,19 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
   }
 
   .prediction-results {
-    margin-left: 25px;
-    margin-right: 25px;
-    min-width: 170px;
-    min-height: 220px;
+    width: 170px;
+    height: 220px;
     background-color: whitesmoke;
     border-radius: 5px;
-  }
-  .prediction-results span.step {
-    font-size: 8em;
-    color: gray;
+    margin-bottom: 5%;
   }
   .prediction-results span.prob {
     font-size: 5em;
-    /*color: gray;*/
+  }
+
+  .disclaimer{
+    color: grey;
+    font-size: 1.3rem;
   }
 
 </style>
