@@ -26,8 +26,8 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
       <div class="one-third column center-content">
         <form class="prediction-results center-content" enctype="multipart/form-data" novalidate>
           <div class="dropbox center-content">
-            <input type="file" :name="uploadFileName" :disabled="isSaving"
-              @change="filesChange($event.target.name, $event.target.files);
+            <input type="file" multiple :disabled="isSaving"
+              @change="fileChange($event.target.files);
               "accept="image/*" class="input-file">
 
               <div class='dropbox-message'>
@@ -78,8 +78,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- JavaScript -->
 <script>
-  // import { wait } from './utils'; // TODO: remove this
-  // import { upload } from './file-upload.fake.service'; //TODO: remove this
   import * as axios from 'axios';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -92,7 +90,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         uploadedImage: {},
         uploadError: null,
         currentStatus: null,
-        uploadFileName: 'images',
         result: {}
       }
     },
@@ -117,52 +114,27 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         this.uploadedFiles = [];
         this.uploadError = null;
       },
-      save(formData) {
-        // upload data to the server
-        this.currentStatus = STATUS_SAVING;
-        // TODO: google storage / datastore save data
-
-        //TODO: remove below
-        // upload(formData)
-        //   .then(wait(1500))
-        //   .then(x => {
-        //     this.uploadedFiles = [].concat(x);
-        //     this.currentStatus = STATUS_SUCCESS; //STATUS_FAILED;
-        //     // this.uploadError = "This is a fake error response. "
-        //   })
-        //   .catch(err => {
-        //     this.uploadError = err.response;
-        //     this.currentStatus = STATUS_FAILED;
-        //   });
-        //TODO: remove above
-
-        this.get_predictions(formData)
-      },
-      filesChange(fieldName, fileList) {
-        // reset after error message and upload attempted
+      fileChange(files) {
+        // reset after error message or upload attempted
         this.reset();
+        if (!files.length) return;
 
-        // handle file changes
-        const formData = new FormData();
-
-        if (!fileList.length) return;
-
-        // append the files to FormData
-        Array
-          .from(Array(fileList.length).keys())
-          .map(x => {
-            formData.append(fieldName, fileList[x], fileList[x].name);
-          });
-
-        // save it
-        this.save(formData);
+        // save it - only one file accepted
+        this.save(files[0]);
       },
-      get_predictions(formData) {
+      save(file) {
+        this.currentStatus = STATUS_SAVING;
+
+        // TODO: google storage / datastore save data
+        this.get_predictions(file)
+      },
+      get_predictions(file) {
           // const BASE_URL = 'http://localhost:5000';
           const BASE_URL = 'http://api.goodscifi.com/api/v1';
-          const file = formData.get('images');
           const url = `${BASE_URL}/books`;
           const fReader = new FileReader();
+
+          console.log(file)
 
           fReader.onload = () => {
               var img_url = fReader.result
