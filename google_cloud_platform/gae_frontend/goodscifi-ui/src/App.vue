@@ -6,44 +6,71 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- HTML Template -->
 <template>
-  <div id="app">
-    <div class="app-center-div">
-      <h1>GOOD SCI-FI</h1>
-      <span>Judging books by their covers since July 1st, 2017</span>
+  <div id="app" class="container">
 
-      <!-- Upload -->
-      <form enctype="multipart/form-data" novalidate>
-        <div class="dropbox">
-          <input type="file" :name="uploadFileName" :disabled="isSaving"
-            @change="filesChange($event.target.name, $event.target.files);
-            "accept="image/*" class="input-file">
+    <div id="header-row" class="row">
+      <div class="twelve columns">
+        <h1>GOOD SCI-FI</h1>
+        Judging books by their covers since July 1st, 2017</br>
+        <span class="disclaimer">Good Sci-Fi is a machine learning, science fiction,
+          book cover image classifier.</br>
+        Open-sourced and openly discussed, personal project on
+        <a href="https://github.com/jasonicarter">Github</a> and
+        <a href="https://medium.com/towards-data-science/4-months-of-machine-deep-learning-89f6ab56a2fd">
+          Medium.</a></span>
+      </div>
+    </div>
 
-            <div class='dropbox-message'>
-              <p v-if="isInitial || isSuccess">
-                Drag your file here<br>or click to browser
-              </p>
-              <p v-if="isSaving">
-                Judging a book by it's cover...
-              </p>
-              <p v-if="isFailed">
-                Upload has failed<br>Please check your file and try again
-                <pre>{{ uploadError }}</pre>
-              </p>
-            </div>
+    <div id="prediction-row" class="row">
+      <!-- UPLOAD -->
+      <div class="one-third column center-content">
+        <form class="prediction-results center-content" enctype="multipart/form-data" novalidate>
+          <div class="dropbox center-content">
+            <input type="file" multiple :disabled="isSaving"
+              @change="fileChange($event.target.files);
+              "accept="image/*" class="input-file">
+
+              <div class='dropbox-message'>
+                <p v-if="isInitial || isSuccess">
+                  Drag your file here<br>or click to browser
+                </p>
+                <p v-if="isSaving">
+                  Judging a book by it's cover...
+                </p>
+                <p v-if="isFailed">
+                  Upload has failed<br>Please check your file and try again
+                  <pre>{{ uploadError }}</pre>
+                </p>
+              </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="one-third column center-content">
+        <div class="prediction-results center-content ">
+          <div class="probability">
+            <img v-if="isSuccess" :src="uploadedImage.url"
+                 class="img-left img-thumbnail" :alt="uploadedImage.fileName">
+             <p v-if="isInitial || isSaving">
+               AI Stuff<br>...Happens
+             </p>
+           </div>
         </div>
-      </form>
+      </div>
 
-      <!--SUCCESS-->
-       <div v-if="isSuccess">
-         <ul class="list-unstyled">
-           <li v-for="item in uploadedFiles">
-             <img :src="item.url" class="img-left img-thumbnail" :alt="item.fileName">
-             <p class="probability">{{ item.probability['good']*100 }} %</p>
-           </li>
-         </ul>
-       </div>
-
-     </div>
+      <!-- PROBABILITY -->
+      <div class="one-third column center-content">
+        <div class="prediction-results center-content ">
+              <div class="probability">
+                <span v-if="isSuccess" class="prob">{{ uploadedImage.probability }}%</span>
+                <p v-if="isInitial || isSaving">
+                  Good Sci-Fi</br>...???
+                </p>
+              </div>
+        </div>
+      </div>
+    </div>
 
    </div>
 </template>
@@ -51,8 +78,6 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- JavaScript -->
 <script>
-  import { wait } from './utils'; // TODO: remove this
-  import { upload } from './file-upload.fake.service'; //TODO: remove this
   import * as axios from 'axios';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -62,9 +87,9 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     data() {
       return {
         uploadedFiles: [],
+        uploadedImage: {},
         uploadError: null,
         currentStatus: null,
-        uploadFileName: 'photos',
         result: {}
       }
     },
@@ -89,52 +114,27 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
         this.uploadedFiles = [];
         this.uploadError = null;
       },
-      save(formData) {
-        // upload data to the server
-        this.currentStatus = STATUS_SAVING;
-        // TODO: google storage / datastore save data
-
-        //TODO: remove below
-
-        upload(formData)
-          .then(wait(1500))
-          .then(x => {
-            this.uploadedFiles = [].concat(x);
-            this.currentStatus = STATUS_SUCCESS; //STATUS_FAILED;
-            // this.uploadError = "This is a fake error response. "
-          })
-          .catch(err => {
-            this.uploadError = err.response;
-            this.currentStatus = STATUS_FAILED;
-          });
-
-        //TODO: remove above
-        // this.get_predictions(formData)
-      },
-      filesChange(fieldName, fileList) {
-        // reset after error message and upload attempted
+      fileChange(files) {
+        // reset after error message or upload attempted
         this.reset();
+        if (!files.length) return;
 
-        // handle file changes
-        const formData = new FormData();
-
-        if (!fileList.length) return;
-
-        // append the files to FormData
-        Array
-          .from(Array(fileList.length).keys())
-          .map(x => {
-            formData.append(fieldName, fileList[x], fileList[x].name);
-          });
-
-        // save it
-        this.save(formData);
+        // save it - only one file accepted
+        this.save(files[0]);
       },
-      get_predictions(formData) {
-          const BASE_URL = 'http://localhost:5000';
-          const file = formData.get('photos');
-          const url = `${BASE_URL}`;
+      save(file) {
+        this.currentStatus = STATUS_SAVING;
+
+        // TODO: google storage / datastore save data
+        this.get_predictions(file)
+      },
+      get_predictions(file) {
+          // const BASE_URL = 'http://localhost:5000';
+          const BASE_URL = 'http://api.goodscifi.com/api/v1';
+          const url = `${BASE_URL}/books`;
           const fReader = new FileReader();
+
+          console.log(file)
 
           fReader.onload = () => {
               var img_url = fReader.result
@@ -150,12 +150,16 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
                   .then(x => x.data['predictions'])
                   .then(x =>
                       x.map(img =>
-                        Object.assign({}, img, {url: img_url})
+                        Object.assign({}, img,
+                          {probability: Math.floor(img.probability)},
+                          {url: img_url})
                       )
                   )
                   .then(x => {
-                    this.uploadedFiles = [].concat(x);
+                    this.uploadedFiles = [].concat(x[0]); //TODO: remove index
+                    this.uploadedImage = x[0];
                     this.currentStatus = STATUS_SUCCESS;
+                    console.log(x)
                   })
                   .catch(err => {
                     this.uploadError = err.response;
@@ -176,9 +180,13 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
 
 <!-- Styling -->
 <style lang="css">
-  .app-center-div {
-    margin: 0 auto;
-    max-width: 800px;
+  #header-row {
+    margin-top: 10%;
+    text-align: center;
+  }
+  #prediction-row {
+    margin-top: 2%;
+    margin-bottom: 2%;
     text-align: center;
   }
 
@@ -187,53 +195,85 @@ https://scotch.io/tutorials/how-to-handle-file-uploads-in-vue-2
     background: whitesmoke;
     color: dimgray;
     padding: 10px 10px;
-    max-width: 800px;
-    max-height: 200px;
+    max-width: 170px;
+    max-height: 220px;
     position: relative;
     cursor: pointer;
     border-radius: 5px;
+  }
+  .dropbox-message {
+    display: inline-block;
+    font-weight: lighter;
+    margin: 40px 20px;
+  }
+  .dropbox:hover {
+    background: lightgrey;
+    height: 200px;
+  }
+  .dropbox p {
+    font-size: 1em;
   }
 
   .input-file {
     opacity: 0;
     width: 100%;
-    height: 200px;
+    height: 220px;
     position: absolute;
     cursor: pointer;
-    top: 0px;
-    left: 0px;
-  }
-
-  .dropbox-message {
-    display: inline-block;
-    padding: 50px;
-  }
-
-  .dropbox:hover {
-    background: lightgrey;
-  }
-
-  .dropbox p {
-    font-size: 1em;
   }
 
   .img-left {
-   float: left;
+    float: left;
     padding: 1px;
-    width: 150px;
     background-color: darkgrey;
     margin-right: 5px;
   }
+  .img-thumbnail {
+    width: 170px;
+    height: 220px;
+    margin: 0;
+    object-fit: cover;
+  }
 
   .probability {
-    font-size: 5em;
-    float: left;
-    margin-top: 0px;
+    font-weight: lighter;
+    color: dimgray;
+  }
+  .probability span {
+    font-size: 3em;
+    font-weight: lighter;
+  }
+  .probability-box {
+    width: 170px;
+    height: 200px;
+    background-color: whitesmoke
   }
 
   .list-unstyled {
     list-style: none;
     padding: 0px;
+  }
+
+  .center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .prediction-results {
+    width: 170px;
+    height: 220px;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    margin-bottom: 5%;
+  }
+  .prediction-results span.prob {
+    font-size: 5em;
+  }
+
+  .disclaimer{
+    color: grey;
+    font-size: 1.3rem;
   }
 
 </style>

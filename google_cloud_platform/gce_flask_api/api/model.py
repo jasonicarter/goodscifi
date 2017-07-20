@@ -1,15 +1,19 @@
-import keras
+import argparse
+
+from keras.models import load_model
 from keras.preprocessing import image
-from keras.applications.inception_v3 import preprocess_input, decode_predictions
+from keras.applications.inception_v3 import preprocess_input
 import numpy as np
 import tensorflow as tf
 
-model = keras.applications.inception_v3.InceptionV3(include_top=True, weights='imagenet', input_tensor=None, input_shape=None)
+# TF Graph
+# https://github.com/fchollet/keras/issues/2397
+model = load_model('/opt/app/models/inception_dl.h5')
 graph = tf.get_default_graph()
 
-
 def predict(image_file):
-    img = image.load_img(image_file, target_size=(299, 299))
+    # Normalize image
+    img = image.load_img(image_file, target_size=(150, 150))
     x = image.img_to_array(img)
     x = np.expand_dims(x,axis=0)
     x = preprocess_input(x)
@@ -18,8 +22,19 @@ def predict(image_file):
     with graph.as_default():
         preds = model.predict(x)
 
-    top3 = decode_predictions(preds,top=3)[0]
+    # Decode probability e.g. [[ 0.56786007  0.4321399 ]]
+    label, probability = ('good', preds[0][0])
 
-    predictions = [{'label': label, 'description': description, 'probability': probability * 100.0}
-                    for label,description, probability in top3]
-    return predictions
+    # Return prediction
+    return [{'label': label, 'probability': probability * 100.0}]
+
+
+# if __name__ == '__main__':
+#     a = argparse.ArgumentParser()
+#     a.add_argument("--image", help="path to image")
+#     args = a.parse_args()
+#
+#     if args.image is not None:
+#       predictions = predict(args.image)
+#
+#     print(predictions)
