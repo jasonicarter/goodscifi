@@ -6,6 +6,7 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from sklearn.metrics import fbeta_score
 from sklearn.model_selection import train_test_split
+from collections import Counter
 
 import seaborn as sns
 sns.set_style('whitegrid')
@@ -21,9 +22,6 @@ from keras.utils import np_utils
 from keras.utils.np_utils import to_categorical
 from keras.models import Sequential, Model
 from keras.layers import Input, Reshape
-from keras.layers.core import Flatten, Dense, Dropout, Lambda
-from keras.layers.normalization import BatchNormalization
-from keras.optimizers import SGD, RMSprop, Adam
 from keras.layers.convolutional import *
 from keras.preprocessing import image
 
@@ -173,3 +171,15 @@ def insert_layer(model, new_layer, index):
         res.add(copied)
         copied.set_weights(layer.get_weights())
     return res
+
+
+def get_class_ratio(dir_path):
+    # Imblanced data (1114, 7054) (good, not_good)
+    # https://stackoverflow.com/a/42587192/1343001
+    datagen = image.ImageDataGenerator()
+    generator = datagen.flow_from_directory(dir_path)
+
+    counter = Counter(generator.classes)                          
+    max_val = float(max(counter.values()))       
+    class_weights = {class_id : max_val/num_images for class_id, num_images in counter.items()}                     
+    return class_weights
